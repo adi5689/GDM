@@ -1,0 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════
+   GRAFIQLY DIGITAL MEDIA 3.0
+   Dark Futuristic Design System
+   ═══════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 229, 255, 0.3) #050505;
+}
+
+body {
+  @apply m-0 bg-primary text-white font-sans antialiased;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 229, 255, 0.5);
+}
+
+::selection {
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
+}
+
+/* ─── Scrollbar Hide ─── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Slow Spin ─── */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ─── 2D SVG Orbit Frame ─── */
+.svg-orbit-frame {
+  position: relative;
+  width: clamp(280px, 34vw, 420px);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.16));
+}
+
+.svg-orbit-frame::before {
+  content: '';
+  position: absolute;
+  inset: 17%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.14), transparent 68%);
+}
+
+.svg-orbit-frame svg {
+  position: absolute;
+  width: 115%;
+  height: 115%;
+  fill: none;
+  overflow: visible;
+  transition: transform 0.5s ease;
+  transform-origin: center;
+  z-index: calc(1 - (0.2 * var(--j)));
+}
+
+.svg-orbit-frame:hover svg {
+  transform: rotate(-80deg) skew(30deg) translateX(calc(45px * var(--i))) translateY(calc(-35px * var(--i)));
+}
+
+.svg-orbit-frame #center {
+  transition: transform 0.5s ease;
+  transform-origin: center;
+}
+
+.svg-orbit-frame:hover #center {
+  transform: rotate(-30deg) translateX(45px) translateY(-3px);
+}
+
+.svg-orbit-frame #out2 {
+  animation: svg-orbit-rotate 7s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.svg-orbit-frame #out3 {
+  animation: svg-orbit-rotate 3s ease-in-out infinite alternate;
+  transform-origin: center;
+  stroke: #00FFFF;
+}
+
+.svg-orbit-frame #inner3,
+.svg-orbit-frame #inner1 {
+  animation: svg-orbit-rotate 4s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.svg-orbit-frame #center1 {
+  fill: #00FFFF;
+  animation: svg-orbit-rotate 2s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes svg-orbit-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg-orbit-frame *,
+  .svg-orbit-frame svg {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: rgba(13, 13, 13, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 229, 255, 0.15);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
+}
+
+/* ─── Neon Borders ─── */
+.neon-border {
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.08);
+}
+
+.neon-border-purple {
+  box-shadow: 0 0 0 1px rgba(138, 43, 226, 0.2), 0 0 20px rgba(138, 43, 226, 0.08);
+}
+
+.neon-border-hover:hover {
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.4), 0 0 30px rgba(0, 229, 255, 0.15);
+}
+
+/* ─── Grid Background ─── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Gradient Text ─── */
+.gradient-text {
+  background: linear-gradient(135deg, #00E5FF 0%, #8A2BE2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-reverse {
+  background: linear-gradient(135deg, #8A2BE2 0%, #00E5FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glow Effects ─── */
+.glow-blue {
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.2);
+}
+
+.glow-purple {
+  text-shadow: 0 0 20px rgba(138, 43, 226, 0.5), 0 0 40px rgba(138, 43, 226, 0.2);
+}
+
+/* ─── Section Spacing ─── */
+.section-padding {
+  @apply py-12 md:py-16 lg:py-24 px-4 sm:px-6 lg:px-8;
+  position: relative;
+  background: linear-gradient(180deg, #050505 0%, #06181a 48%, #072326 55%, #050505 100%);
+}
+
+.section-container {
+  @apply max-w-7xl mx-auto;
+}
+
+/* ─── Animated Underline ─── */
+.animated-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00E5FF, #8A2BE2);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animated-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── Magnetic Button Base ─── */
+.magnetic-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+/* ─── Loading Shimmer ─── */
+.shimmer-bg {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ─── 3D Scene Loading Placeholder ─── */
+.scene-loading {
+  @apply flex items-center justify-center;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.05) 0%, transparent 70%);
+}
+
+.scene-loading::after {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(0, 229, 255, 0.2);
+  border-top-color: #00E5FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
