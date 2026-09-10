@@ -1,195 +1,30 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
-
-const headlineWords = ['Future-Proof', 'Your', 'Brand']
-
-const wordVariants = {
-  hidden: { opacity: 0, y: 40, filter: 'blur(8px)' },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: {
-      delay: 0.5 + i * 0.15,
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  }),
-}
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-}
-
-function LightStreak({ className, delay, duration }) {
-  return (
-    <motion.div
-      className={`absolute pointer-events-none ${className}`}
-      initial={{ x: '-100%', opacity: 0 }}
-      animate={{ x: '200%', opacity: [0, 0.6, 0.6, 0] }}
-      transition={{
-        delay,
-        duration,
-        repeat: Infinity,
-        repeatDelay: duration * 1.5,
-        ease: 'linear',
-      }}
-    >
-      <div className="h-[1px] w-[300px] md:w-[500px] bg-gradient-to-r from-transparent via-accent/40 to-transparent rotate-[-25deg]" />
-    </motion.div>
-  )
-}
-
-function ScrollIndicator() {
-  return (
-    <motion.div
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 2.5, duration: 1 }}
-    >
-      <span className="text-xs text-subtext tracking-widest uppercase font-light">
-        Scroll to explore
-      </span>
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <ChevronDown className="w-5 h-5 text-accent/60" />
-      </motion.div>
-    </motion.div>
-  )
-}
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 export function HeroSection() {
-  const containerRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
+  const sectionRef = useRef(null)
+  const [mobile, setMobile] = useState(false)
+  const [revealed, setRevealed] = useState(false)
+  const reducedMotion = useReducedMotion()
+  useEffect(() => {
+    const media = matchMedia('(max-width: 700px)')
+    const sync = () => setMobile(media.matches)
+    sync(); media.addEventListener('change', sync)
+    return () => media.removeEventListener('change', sync)
+  }, [])
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
+  const width = useTransform(scrollYProgress, [0, 1], [mobile ? '42vw' : '18vw', '100vw'])
+  const height = useTransform(scrollYProgress, [0, 1], [mobile ? '14vh' : '15vh', '100vh'])
+  const radius = useTransform(scrollYProgress, [0, 1], [50, 0])
+  const ideaOpacity = useTransform(scrollYProgress, [0, .1, .2], [1, 1, 0])
+  const ideaScale = useTransform(scrollYProgress, [0, .2], [1, .86])
+  const sideOpacity = useTransform(scrollYProgress, [0, .14, .24], [1, 1, 0])
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    const nextRevealed = progress >= .34
+    setRevealed(current => current === nextRevealed ? current : nextRevealed)
   })
+  const mediaStyle = reducedMotion ? { width: '100vw', height: '100vh', borderRadius: 0 } : { width, height, borderRadius: radius }
 
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -80])
-  const opacityFade = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-
-  return (
-    <section
-      ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden"
-    >
-      {/* ═══ Video Background ═══ */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-        >
-          <source src="/hero_g.mp4" type="video/mp4" />
-        </video>
-        {/* Dark overlay instead of CSS filter — zero per-frame GPU cost */}
-        <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-      </div>
-
-      {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-20 z-[1]" />
-
-      {/* Radial glow accents */}
-      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none z-[1]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-highlight/5 rounded-full blur-[100px] pointer-events-none z-[1]" />
-
-      {/* Light streaks */}
-      <LightStreak className="top-[20%] left-0" delay={1} duration={4} />
-      <LightStreak className="top-[50%] left-0" delay={3} duration={5} />
-      <LightStreak className="top-[75%] left-0" delay={5.5} duration={3.5} />
-
-      {/* Main content — centered */}
-      <motion.div
-        className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-center text-center"
-        style={{ opacity: opacityFade, y: contentY }}
-      >
-        {/* Eyebrow */}
-        <motion.p
-          className="text-accent text-xs sm:text-sm tracking-[0.3em] uppercase font-medium mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-        >
-          {'GRAFIQLY DIGITAL MEDIA 2.0'}
-        </motion.p>
-
-        {/* Headline with staggered word animation */}
-        <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95] tracking-tight mb-8">
-          {headlineWords.map((word, i) => (
-            <motion.span
-              key={word}
-              className="inline-block mr-4 lg:mr-6"
-              variants={wordVariants}
-              initial="hidden"
-              animate="visible"
-              custom={i}
-            >
-              {word === 'Future-Proof' ? (
-                <span className="text-accent">{word}</span>
-              ) : (
-                word
-              )}
-            </motion.span>
-          ))}
-        </h1>
-
-        {/* Subheadline */}
-        <motion.p
-          className="text-lg text-white md:text-xl text-subtext max-w-2xl leading-relaxed mb-10"
-          initial="hidden"
-          animate="visible"
-          custom={1.3}
-        >
-          We blend creativity, strategy and technology to build
-          unforgettable digital experiences that drive real business growth.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          className="flex flex-wrap justify-center gap-4 pt-2"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={1.6}
-        >
-          <a
-            href="#contact"
-            className="group relative inline-flex items-center gap-2 px-8 py-4 bg-accent text-primary font-semibold text-sm uppercase tracking-wider rounded-lg overflow-hidden transition-all duration-300 hover:shadow-neon-blue hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span className="relative z-10">Start Your Project</span>
-            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
-          </a>
-          <a
-            href="#portfolio"
-            className="group inline-flex items-center gap-2 px-8 py-4 border border-accent/40 text-accent font-semibold text-sm uppercase tracking-wider rounded-lg transition-all duration-300 hover:border-accent hover:bg-accent/5 hover:shadow-neon-sm hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span>Explore Our Work</span>
-            <motion.span
-              className="inline-block"
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              →
-            </motion.span>
-          </a>
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <ScrollIndicator />
-    </section>
-  )
+  return <section id="home" className="scroll-hero" ref={sectionRef}><div className="scroll-hero-sticky"><motion.div className="scroll-hero-side scroll-hero-left" style={reducedMotion ? undefined : { opacity: sideOpacity }}>Independent<br />thinking.</motion.div><motion.div className="scroll-hero-media" style={mediaStyle}><video autoPlay muted loop playsInline preload="metadata" src="/media/hero_bg.mp4" aria-label="Grafiqly studio reel" /><div className="scroll-hero-overlay" /><motion.span className="scroll-hero-idea" style={reducedMotion ? undefined : { opacity: ideaOpacity, scale: ideaScale }}>Ideas.</motion.span><div className={`scroll-hero-reveal ${revealed || reducedMotion ? 'is-revealed' : ''}`}><div className="scroll-hero-topline"><p className="eyebrow"><span className="status-dot" /> Independent thinking. Connected expertise.</p><span>Mumbai, India · Working everywhere</span></div><h1>Future-proof<br />your <span>brand.</span></h1><div className="scroll-hero-intro"><p>Strategy, design, content and technology. All working together to move your business forward.</p><a className="scroll-hero-cta" href="#contact">Start a project <span><ArrowUpRight size={20} /></span></a></div><div className="scroll-hero-utility"><span>Creative studio. Digital partner.</span><a href="#portfolio">Discover our work <ArrowDown size={16} /></a></div></div></motion.div><motion.div className="scroll-hero-side scroll-hero-right" style={reducedMotion ? undefined : { opacity: sideOpacity }}>Brands<br />that move.</motion.div><div className="scroll-hero-progress" aria-hidden="true"><span>Scroll to reveal</span><i /></div></div></section>
 }
