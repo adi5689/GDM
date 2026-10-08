@@ -27,23 +27,36 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/5">
-      {/* Grid overlay */}
-      <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
+    <footer className="relative border-t border-white/5 overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        src="/footer_bg.mp4"
+      />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+      {/* Dark overlay to keep content readable */}
+      <div className="absolute inset-0 bg-black/35 z-[1]" />
+
+      {/* Grid overlay */}
+      <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none z-[2]" />
+
+      <div className="relative z-[3] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <a href="#" className="flex items-center gap-1.5 mb-4 group">
-              <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-display font-bold text-sm">G</span>
+            <a href="#" className="inline-flex items-center mb-4 group">
+              <div className="bg-white px-3 py-1.5 rounded-xl shadow-md border border-white/20 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.35)] group-hover:scale-[1.02] flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="Grafiqly Digital Media"
+                  className="h-7 md:h-8 w-auto object-contain"
+                />
               </div>
-              <span className="font-display font-bold text-lg tracking-tight">
-                Grafiqly
-                <span className="text-accent">.digital</span>
-              </span>
             </a>
             <p className="text-subtext text-sm leading-relaxed mb-6">
               Transforming ideas into digital dominance. We blend creativity, strategy, and technology to build unforgettable experiences.

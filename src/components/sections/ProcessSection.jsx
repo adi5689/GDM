@@ -288,11 +288,20 @@ function DesktopTimeline() {
 export function ProcessSection() {
   return (
     <section id="process" className="section-padding relative overflow-hidden">
-      {/* Background accents */}
-      <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-highlight/3 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-40 w-[400px] h-[400px] bg-accent/3 rounded-full blur-[120px] pointer-events-none" />
+      {/* Video Background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+        src="/effect_bg.mp4"
+      />
 
-      <div className="section-container">
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/15 z-[1] pointer-events-none" />
+
+      <div className="section-container relative z-[2]">
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
